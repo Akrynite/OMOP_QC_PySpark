@@ -600,7 +600,7 @@ class MeasurementValuePlausibilityCheck(BaseCheck):
         meas = df.filter(
             F.col("value_as_number").isNotNull()
             & F.col("measurement_concept_id").isNotNull()
-        ).select("measurement_concept_id", "value_as_number")
+        ).select("measurement_concept_id", F.col("value_as_number").cast("double").alias("value_as_number"))
 
         joined = meas.join(
             F.broadcast(range_df),
@@ -806,7 +806,7 @@ class ValueAsNumberOutlierCheck(BaseCheck):
         if not has_column(df, "value_as_number"):
             return rows_to_df(spark, [])
 
-        vals = df.filter(F.col("value_as_number").isNotNull()).select("value_as_number")
+        vals = df.filter(F.col("value_as_number").isNotNull()).select(F.col("value_as_number").cast("double").alias("value_as_number"))
         total = vals.count()
         if total == 0:
             return rows_to_df(spark, [])
