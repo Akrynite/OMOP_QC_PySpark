@@ -23,7 +23,7 @@ def generate_summary(results_df: DataFrame, spark: SparkSession) -> DataFrame:
     Returns columns: table_name, total_checks, passed, failed,
     error_count, warn_count, info_count.  Includes a final ``__OVERALL__`` row.
     """
-    if results_df.rdd.isEmpty():
+    if len(results_df.head(1)) == 0:
         return spark.createDataFrame([], schema=_SUMMARY_SCHEMA)
 
     per_table = results_df.groupBy("table_name").agg(
