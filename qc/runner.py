@@ -64,6 +64,12 @@ def run_qc(
     # -- normalise table names to lower-case ----------------------------------
     tables = {k.lower(): v for k, v in tables.items()}
 
+    # -- normalise column names to lower-case ----------------------------------
+    tables = {
+        tname: df.toDF(*[c.lower() for c in df.columns])
+        for tname, df in tables.items()
+    }
+
     # -- resolve checks -------------------------------------------------------
     if check_instances is None:
         check_instances = discover_checks()

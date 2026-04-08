@@ -8,7 +8,11 @@ import pyspark.sql.functions as F
 
 
 def has_column(df: DataFrame, col_name: str) -> bool:
-    """Return True if *df* contains column *col_name*."""
+    """Return True if *df* contains column *col_name*.
+
+    Note: Column names are normalized to lowercase by the runner before
+    checks execute, so this performs case-sensitive matching.
+    """
     return col_name in df.columns
 
 
