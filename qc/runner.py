@@ -65,10 +65,16 @@ def run_qc(
     tables = {k.lower(): v for k, v in tables.items()}
 
     # -- normalise column names to lower-case ----------------------------------
-    tables = {
-        tname: df.toDF(*[c.lower() for c in df.columns])
-        for tname, df in tables.items()
-    }
+    if verbose:
+        print("\n[DEBUG] Normalizing column names...")
+    normalized_tables = {}
+    for tname, df in tables.items():
+        original_cols = df.columns
+        normalized_df = df.toDF(*[c.lower() for c in df.columns])
+        normalized_tables[tname] = normalized_df
+        if verbose:
+            print(f"  {tname}: {original_cols[:3]} -> {normalized_df.columns[:3]}")
+    tables = normalized_tables
 
     # -- resolve checks -------------------------------------------------------
     if check_instances is None:

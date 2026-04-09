@@ -7,13 +7,16 @@ from pyspark.sql import DataFrame
 import pyspark.sql.functions as F
 
 
-def has_column(df: DataFrame, col_name: str) -> bool:
+def has_column(df: DataFrame, col_name: str, debug: bool = False) -> bool:
     """Return True if *df* contains column *col_name*.
 
     Note: Column names are normalized to lowercase by the runner before
     checks execute, so this performs case-sensitive matching.
     """
-    return col_name in df.columns
+    result = col_name in df.columns
+    if debug or not result:  # Print if debug mode or column not found
+        print(f"[DEBUG] has_column('{col_name}'): {result} | Available: {df.columns[:5]}")
+    return result
 
 
 def get_example_values(
